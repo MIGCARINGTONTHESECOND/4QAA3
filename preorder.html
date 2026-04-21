@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pre-Order Form</title>
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 50px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input, select {
+      width: 95%;
+      padding: 8px;
+      margin: 8px 0;
+    }
+
+    #terms {
+      width: 10%;
+    }
+
+    button {
+      padding: 10px;
+      width: 100%;
+      margin-top: 5px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .error {
+      color: red;
+      margin-bottom: 10px;
+      min-height: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Science Project Pre-Order</h2>
+  <p> Meet BaryoBubble a herbal and antibacterial soap! Infused with guava and lemongrass, Baryobubble provides natural cleansing and (The first ever)Mosquito-repellant for your skin. Coming in  a dissolvable tablet form (one of the first ever for body soaps)  and bar soap form! Buy now and feel innovation with Baryobubble!</p>
+
+  <!-- Error Message Area -->
+  <div id="errorMsg" class="error"></div>
+
+  <form onsubmit="return handleOrder()">
+    
+    <label>Name:</label>
+    <input type="text" id="name">
+
+    <label>Product:</label>
+    <select id="variant">
+      <option value="">Select</option>
+      <option value="value1">Dissolvable Tablet Soap (10 tablets per container) (PHP 30)</option>
+      <option value="value2">Bar Soap (1 bar per package) (PHP 20)</option>
+    </select>
+
+    <label>Quantity:</label>
+    <input type="number" id="quantity">
+
+    <label>Pickup Method:</label>
+    <select id="pickup">
+      <option value="">Select</option>
+      <option value="Delivery">Delivery</option>
+      <option value="Meetup">Meetup</option>
+    </select>
+
+    <label>Address (for delivery only):</label>
+    <input type="text" id="address">
+
+    <label>
+      <input type="checkbox" id="terms"> I accept terms
+    </label>
+    <br><br>
+
+    <button type="button" onclick="loadPreviousOrder()">Load Previous Order</button>
+    <button type="submit">Submit</button>
+
+  </form>
+</div>
+
+<script>
+
+  // COOKIE FUNCTIONS
+  function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + d.toUTCString();
+  document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+}
+
+function getCookie(name) {
+    let nameEQ = name + "="; 
+    let decodedCookie = decodeURIComponent(document.cookie);  // Get alls cookies
+    let ca = decodedCookie.split(';');  
+
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1); 
+        }
+        if (c.indexOf(nameEQ) == 0) {  // Find the cookie you want
+            return c.substring(nameEQ.length, c.length);  // Return its value
+        }
+    }
+    return "";  // Return empty if not found
+}
+
+
+
+function deleteCookie(name) {
+  document.cookie = name + "=; expires=Thu, 21 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+  // MAIN SUBMIT HANDLER
+  function handleOrder() {
+    document.getElementById("errorMsg").innerHTML = "";
+    
+    var name = document.getElementById("name").value;
+    var variant = document.getElementById("variant").value;
+    var quantity = document.getElementById("quantity").value;
+    var pickup = document.getElementById("pickup").value;
+    var address = document.getElementById("address").value;
+    var terms = document.getElementById("terms").checked;
+
+    if (name === "") {
+  document.getElementById("errorMsg").innerHTML = "Name is required.";
+  return false;
+}
+if (variant === "") {
+  document.getElementById("errorMsg").innerHTML = "Product variant is required.";
+  return false;
+}
+if (!(quantity > 0)) {
+  document.getElementById("errorMsg").innerHTML = "Quantity must be a positive number.";
+  return false;
+}
+if (pickup === "") {
+  document.getElementById("errorMsg").innerHTML = "Pickup method is required.";
+  return false;
+}
+if (pickup === "Delivery" && address === "") {
+  document.getElementById("errorMsg").innerHTML = "Address is required for delivery.";
+  return false;
+}
+if (!terms) {
+  document.getElementById("errorMsg").innerHTML = "You must accept the terms.";
+  return false;
+}
+
+// Set cookies for valid data
+setCookie("name", name, 100);
+localStorage.setItem("variant", variant);
+localStorage.setItem("quantity", quantity);
+localStorage.setItem("pickup", pickup);
+localStorage.setItem("address", address);
+
+// Redirect to summary page
+window.location.href = "summary.html";
+return false;
+  }
+
+  // LOAD PREVIOUS ORDER
+  function loadPreviousOrder() {
+  const prevname = getCookie("name");
+  const prevvariant = localStorage.getItem("variant");
+  const prevquantity = localStorage.getItem("quantity");
+  const prevpickup = localStorage.getItem("pickup");
+  const prevaddress = localStorage.getItem("address");
+
+  if (!prevname && !prevvariant && !prevquantity && !prevpickup && !prevaddress) {
+    document.getElementById("errorMsg").innerHTML = "No previous order data.";
+    return;
+  }
+
+  // Populate fields
+  document.getElementById("name").value = prevname;
+  document.getElementById("variant").value = prevvariant;
+  document.getElementById("quantity").value = prevquantity;
+  document.getElementById("pickup").value = prevpickup;
+  document.getElementById("address").value = prevaddress;
+  }
+
+</script>
+
+</body>
+</html>

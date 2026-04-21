@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <style>
+          body {
+      font-family: Arial;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 50px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    button {
+      padding: 10px;
+      width: 100%;
+      margin-top: 5px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+        h2 {
+            text-align: center;
+        }
+        p {
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2> Order summary </h2>
+        <p> Name: <span id="oldName"></span></p>
+        <p> Product: <span id="oldVariant"></span></p>
+        <p> Quantity: <span id="oldQuantity"></span></p>
+        <p> Total Amount: <span id="TOTALAMOUNT"></span></p>
+        <p> Pickup Method: <span id="oldPickup"></span></p>
+        <p> Address (If applicable): <span id="oldAddress"></span></p>
+        <p> Thank you so much for ordering BaryoBubble! One of the first ever mosquito-repellent soap with natural ingredients. For any inquiries about your order contact us at support@baryobubble.com. </p>
+        
+        <button onclick="window.location.href='676767.html'">Return to Order Form</button>
+
+    </div>
+
+    <script>
+        // Function to get cookie value
+        function getCookie(name) {
+             let nameEQ = name + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(nameEQ) == 0) {
+      return c.substring(nameEQ.length, c.length);
+    }
+  }
+  return "";
+}
+
+        // Gets the data
+        const name = getCookie("name");
+        const variant = localStorage.getItem("variant");
+        const quantity = localStorage.getItem("quantity");
+        const pickup = localStorage.getItem("pickup");
+        const address = localStorage.getItem("address");
+
+        // DDISPLAYS the data
+        document.getElementById("oldName").textContent = name || "None inputted";
+        document.getElementById("oldVariant").textContent = variant || "None inputted";
+        document.getElementById("oldQuantity").textContent = quantity || "None inputted";
+        document.getElementById("oldPickup").textContent = pickup || "None inputted";
+        document.getElementById("oldAddress").textContent = address || "None inputted";
+
+
+        //CALCULATES total amount
+        TOTALAMOUNT = 0;
+        if (variant === "value1") {
+            TOTALAMOUNT = 30 * quantity;
+        } else if (variant === "value2") {
+            TOTALAMOUNT = 20 * quantity;
+        }
+        document.getElementById("TOTALAMOUNT").textContent = "PHP " + TOTAL
+    </script>
+</body>
+</html>
