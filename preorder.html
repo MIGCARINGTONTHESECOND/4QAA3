@@ -11,7 +11,7 @@
     .container {
       width: 500px;
       margin: auto;
-      background: white;
+      background: rgb(177, 242, 158);
       padding: 20px;
       border-radius: 10px;
       margin-top: 50px;
@@ -101,25 +101,20 @@
   function setCookie(name, value, days) {
   const d = new Date();
   d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-  const expires = "expires=" + d.toUTCString();
-  document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
-}
+  document.cookie = name + "=" + encodeURIComponent(value) +
+    "; expires=" + d.toUTCString() + // I added encodeURIComponent so mas ma better handling of special characters in cookies
+    "; path=/; SameSite=Lax"; // I added SameSite for better security po maam
+  }
 
 function getCookie(name) {
-    let nameEQ = name + "="; 
-    let decodedCookie = decodeURIComponent(document.cookie);  // Get alls cookies
-    let ca = decodedCookie.split(';');  
-
-    for(let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1); 
-        }
-        if (c.indexOf(nameEQ) == 0) {  // Find the cookie you want
-            return c.substring(nameEQ.length, c.length);  // Return its value
+    const cookies = document.cookie.split('; ');
+    for (let i = 0; i < cookies.length; i++) {
+        let parts = cookies[i].split('=');
+        if (parts[0] === name) {
+            return decodeURIComponent(parts[1]);
         }
     }
-    return "";  // Return empty if not found
+    return "";
 }
 
 
@@ -132,7 +127,9 @@ function deleteCookie(name) {
   function handleOrder() {
     document.getElementById("errorMsg").innerHTML = "";
     
+    
     var name = document.getElementById("name").value;
+    var newname = document.getElementById("name").value;
     var variant = document.getElementById("variant").value;
     var quantity = document.getElementById("quantity").value;
     var pickup = document.getElementById("pickup").value;
@@ -166,19 +163,21 @@ if (!terms) {
 
 // Set cookies for valid data
 setCookie("name", name, 100);
+localStorage.setItem("name", name);
 localStorage.setItem("variant", variant);
 localStorage.setItem("quantity", quantity);
 localStorage.setItem("pickup", pickup);
 localStorage.setItem("address", address);
 
 // Redirect to summary page
-window.location.href = "summary.html";
+setTimeout(() => { window.location.href = "summary.html"; }, 100);
 return false;
   }
 
   // LOAD PREVIOUS ORDER
   function loadPreviousOrder() {
-  const prevname = getCookie("name");
+  const prevname = getCookie("name") || localStorage.getItem("name");
+  const prevnamesecond = localStorage.getItem("name");
   const prevvariant = localStorage.getItem("variant");
   const prevquantity = localStorage.getItem("quantity");
   const prevpickup = localStorage.getItem("pickup");
