@@ -7,7 +7,7 @@
     <style>
           body {
       font-family: Arial;
-      background-color: #f4f4f4;
+      background-color: #eebbe0;
     }
 
     .container {
@@ -56,33 +56,37 @@
     </div>
 
     <script>
+
         // Function to get cookie value
-        function getCookie(name) {
-             let nameEQ = name + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
+      function getCookie(name) {
+    const cookies = document.cookie.split('; ');
+    for (let i = 0; i < cookies.length; i++) {
+        let parts = cookies[i].split('=');
+        if (parts[0] === name) {
+            return decodeURIComponent(parts[1]);
+        }
     }
-    if (c.indexOf(nameEQ) == 0) {
-      return c.substring(nameEQ.length, c.length);
-    }
-  }
-  return "";
+    return "";
 }
 
         // Gets the data
-        const name = getCookie("name");
+        const cookieName = getCookie("name"); // Look for the cookie
+        const localName = localStorage.getItem("name"); // Look for localStorage just in case
+        const displayName = cookieName || localName || "None inputted"; // Prioritize cookie, then localStorage
+        const newname = localStorage.getItem("name");
         const variant = localStorage.getItem("variant");
         const quantity = localStorage.getItem("quantity");
         const pickup = localStorage.getItem("pickup");
         const address = localStorage.getItem("address");
 
         // DDISPLAYS the data
-        document.getElementById("oldName").textContent = name || "None inputted";
+        document.getElementById("oldName").textContent = newname || "None inputted";
         document.getElementById("oldVariant").textContent = variant || "None inputted";
+        if (variant === "value1") {
+            document.getElementById("oldVariant").textContent = "Dissolvable Tablet Soap (10 tablets per container) (PHP 30)";
+        } else if (variant === "value2") {
+            document.getElementById("oldVariant").textContent = "Bar Soap (1 bar per package) (PHP 20)";
+        }
         document.getElementById("oldQuantity").textContent = quantity || "None inputted";
         document.getElementById("oldPickup").textContent = pickup || "None inputted";
         document.getElementById("oldAddress").textContent = address || "None inputted";
@@ -95,7 +99,7 @@
         } else if (variant === "value2") {
             TOTALAMOUNT = 20 * quantity;
         }
-        document.getElementById("TOTALAMOUNT").textContent = "PHP " + TOTAL
+        document.getElementById("TOTALAMOUNT").textContent = "PHP " + TOTALAMOUNT;
     </script>
 </body>
 </html>
